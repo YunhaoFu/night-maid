@@ -24,8 +24,8 @@
     <a class="brand" href="#top" aria-label="00:13 返回顶部"><span class="brand-mark">13</span><span>00:13 / NIGHT INDEX</span></a>
     <nav class="header-nav" aria-label="页面导航">
       <a href="#catalogue">馆藏</a>
-      <a href="#paths">主题路径</a>
-      <button class="archive-button" id="savedButton" type="button" aria-label="查看已留档条目"><i data-lucide="bookmark"></i> 留档 <span class="archive-count" id="savedCount">0</span></button>
+      <a href="#guestbook">留言板</a>
+      <button class="archive-button" id="savedButton" type="button" aria-label="查看我的清单"><i data-lucide="bookmark"></i> 我的清单 <span class="archive-count" id="savedCount">0</span></button>
     </nav>
   </header>
 
@@ -34,8 +34,8 @@
       <div class="hero-grid"></div>
       <div class="hero-inner">
         <p class="eyebrow">CURATED SCREENING NOTES / ISSUE 01</p>
-        <h1 id="hero-title">夜间<br><em>看片簿。</em></h1>
-        <p class="hero-copy">电影、剧集、动画、小说、漫画和游戏。给还想认真看完一部作品的人，也给不想再在首页里来回划的人。</p>
+        <h1 id="hero-title">深夜の鑑賞録</h1>
+        <p class="hero-copy">收录有电影、剧集、动画、小说、漫画和游戏</p>
         <div class="hero-bottom">
           <div class="time-readout"><span>00:13</span><small>ISSUE 01 / 80 WORKS</small></div>
           <div class="scroll-note"><span>继续浏览</span><span class="scroll-line"></span></div>
@@ -43,18 +43,18 @@
       </div>
     </section>
 
-    <section class="intro-band">
-      <h2 class="intro-title">不是榜单。<br>是一份<br><i>有偏向的清单。</i></h2>
+    <section class="intro-band" id="manifesto">
+      <div class="manifesto-title-wrap"><span class="blood-badge" aria-hidden="true">13</span><h2 class="intro-title" id="manifestoTitle">今晚别先睡。</h2></div>
       <div class="intro-side">
-        <p>分数只是起点。我们更在意一部作品怎样建立悬念、使用空间、处理人物，以及它是否值得把注意力交出去两个小时。</p>
-        <div class="source-note"><b>80 个编辑条目</b><br>电影 / 长剧 / 动画 / 小说 / 漫画 / 游戏<br>评分为常见社群口碑参考，可能随时间浮动。</div>
+        <p id="manifestoCopy">这页不负责替你选“必看”。它只把值得花时间的东西放到同一张桌上。</p>
+        <div class="source-note" id="manifestoMeta"><b>80 部 / 6 种媒介</b><br>分数在角落，偏见在前面。<br>每次打开，会换一张便签。</div>
       </div>
     </section>
 
     <section class="library" id="catalogue" aria-labelledby="catalogue-title">
       <div class="section-head">
         <div><div class="section-index">01 / THE COLLECTION</div><h2 class="section-title" id="catalogue-title">从哪一扇门进去？</h2></div>
-        <p class="collection-meta">按媒介、场景和叙事方式整理。你可以从熟悉的标题开始，也可以让一张封面带路。</p>
+        <p class="collection-meta">媒体、場所、語り方で並べた。知っている題名からでも、知らない表紙からでも。</p>
       </div>
       <div class="filters" role="search">
         <label class="search-wrap" for="search"><i data-lucide="search"></i><input id="search" type="search" autocomplete="off" placeholder="输入片名、人名、线索，例如：雨夜 / 失踪 / 村庄"></label>
@@ -67,16 +67,22 @@
           <button class="filter" data-filter="manga" type="button">漫画</button>
           <button class="filter" data-filter="game" type="button">游戏</button>
         </div>
+        <div class="filter-list watch-filter-list" aria-label="观看状态筛选">
+          <span class="filter-label">状态</span>
+          <button class="watch-filter active" data-watch-filter="all" type="button">全部</button>
+          <button class="watch-filter" data-watch-filter="watched" type="button">已看</button>
+          <button class="watch-filter" data-watch-filter="unwatched" type="button">未看</button>
+        </div>
       </div>
       <div class="filter-status" id="filterStatus" hidden><span id="filterStatusText"></span><button class="clear-filters" id="clearFilters" type="button">回到全部馆藏</button></div>
 
       <article class="feature-grid" aria-label="本夜优先档案">
         <div class="feature-copy">
-          <div><div class="feature-number">SHELF A / 1997</div><h3>为什么是<br>CURE</h3><p>黑泽清把一宗连环案件拍成缓慢失焦的日常。刑警越接近嫌疑人，周围的人越像换了另一种说话方式。</p></div>
-          <button class="detail-link" type="button" data-open="cure">查看条目 <i data-lucide="arrow-up-right"></i></button>
+          <div><div class="feature-number" id="featureNumber">SHELF A / 1997</div><h3 id="featureTitle">CURE</h3><p id="featureCopy">黑泽清把一宗连环案件拍成缓慢失焦的日常。刑警越接近嫌疑人，周围的人越像换了另一种说话方式。</p></div>
+          <button class="detail-link" id="featureOpen" type="button">查看条目 <i data-lucide="arrow-up-right"></i></button>
         </div>
-        <div class="feature-photo"><span class="photo-credit">POSTER / TMDB</span></div>
-        <div class="feature-annotation"><div><div class="rating"><i data-lucide="star"></i> 7.4 / 10</div><p class="annotation-label">EDITOR'S PICK</p><p class="annotation">没有夸张剪辑，也很少解释。它靠停顿、构图和一再重复的问题，把不安留在画面之外。</p></div><div class="feature-tags"><span>刑警</span><span>失忆</span><span>东京</span><span>黑泽清</span></div></div>
+        <div class="feature-photo" id="featurePhoto"><span class="photo-credit" id="featureCredit">POSTER / TMDB</span></div>
+        <div class="feature-annotation"><div><div class="rating" id="featureRating"><i data-lucide="star"></i> 7.4 / 10</div><p class="annotation-label">EDITOR'S PICK</p><p class="annotation" id="featureAnnotation">没有夸张剪辑，也很少解释。它靠停顿、构图和一再重复的问题，把不安留在画面之外。</p></div><div class="feature-tags" id="featureTags"></div></div>
       </article>
 
       <div class="catalogue">
@@ -86,18 +92,15 @@
       </div>
     </section>
 
-    <section class="paths" id="paths" aria-labelledby="paths-title">
-      <div class="paths-intro"><h2 id="paths-title">按<br><em>想看的感觉</em><br>来选。</h2><p>还没有选片目标时，可以从这里开始。四条路径不是严格分类，只是把相近的观看体验放在一起。</p></div>
-      <div class="path-list">
-        <a class="path" href="#catalogue" data-path="sealed"><span class="path-no">A-01</span><span class="path-title">封闭空间</span><span class="path-items">The Thing · The Others · House of Leaves</span><span class="path-arrow"><i data-lucide="arrow-down-right"></i></span></a>
-        <a class="path" href="#catalogue" data-path="town"><span class="path-no">B-04</span><span class="path-title">小镇异闻</span><span class="path-items">Twin Peaks · The Wailing · Higurashi</span><span class="path-arrow"><i data-lucide="arrow-down-right"></i></span></a>
-        <a class="path" href="#catalogue" data-path="mind"><span class="path-no">C-07</span><span class="path-title">身份与记忆</span><span class="path-items">Perfect Blue · Shutter Island · Monster</span><span class="path-arrow"><i data-lucide="arrow-down-right"></i></span></a>
-        <a class="path" href="#catalogue" data-path="detective"><span class="path-no">D-12</span><span class="path-title">调查与谜案</span><span class="path-items">True Detective · The Devotion of Suspect X · Se7en</span><span class="path-arrow"><i data-lucide="arrow-down-right"></i></span></a>
+    <section class="guestbook" id="guestbook" aria-labelledby="guestbook-title">
+      <div class="guestbook-inner">
+        <div><p class="guestbook-index">02 / GUEST BOOK</p><h2 id="guestbook-title">留言板</h2><p class="guestbook-copy">想补一部，想反驳一条，或者只想说你看完以后没睡着，都可以写下来。</p><a class="guestbook-email" href="mailto:yunhaofu979@gmail.com">yunhaofu979@gmail.com</a></div>
+        <form class="guestbook-form" id="guestbookForm" data-email="yunhaofu979@gmail.com"><label for="guestbookMessage">写给编辑</label><textarea id="guestbookMessage" maxlength="800" required placeholder="留下片名、想法或一句话"></textarea><button type="submit"><i data-lucide="send"></i> 发送留言</button></form>
       </div>
     </section>
 
     <section class="finale">
-      <div class="finale-content"><p class="eyebrow">END OF ISSUE 01</p><h2>这份清单<br><em>还会继续长。</em></h2><p>已留档作品只保存在当前浏览器。本页提供资料入口，不提供播放或下载。</p><button class="finale-link" id="finalSaved" type="button"><i data-lucide="bookmark"></i> 我的留档</button></div>
+      <div class="finale-content"><p class="eyebrow">END OF ISSUE 01</p><h2>このリストは<br><em>まだ増えていく。</em></h2><p>保存した作品はこのブラウザにのみ残ります。このページでは作品情報のみを案内し、再生やダウンロードは提供しません。</p><button class="finale-link" id="finalSaved" type="button"><i data-lucide="bookmark"></i> マイリスト</button></div>
     </section>
   </main>
   <footer><span>00:13 / A CURATED NIGHT INDEX</span><a href="credits.html">编辑与图像说明</a><span>中文资料：豆瓣 / Bangumi · 非播放平台</span></footer>
@@ -106,7 +109,7 @@
     <article class="dialog">
       <button class="close" id="closeModal" type="button" aria-label="关闭详情"><i data-lucide="x"></i></button>
       <div class="dialog-art" id="dialogArt"><span class="dialog-code" id="dialogCode">ARCHIVE / 000</span></div>
-      <div class="dialog-body"><div class="dialog-meta" id="dialogMeta"></div><h2 id="dialogTitle"></h2><div class="dialog-original" id="dialogOriginal"></div><p class="dialog-summary" id="dialogSummary"></p><div class="dialog-bottom"><span class="dialog-score" id="dialogScore"></span><a class="go-source" id="dialogLink" href="#" target="_blank" rel="noopener"><span id="dialogLinkLabel">打开中文资料</span><i data-lucide="arrow-up-right"></i></a></div></div>
+      <div class="dialog-body"><div class="dialog-meta" id="dialogMeta"></div><h2 id="dialogTitle"></h2><div class="dialog-original" id="dialogOriginal"></div><p class="dialog-summary" id="dialogSummary"></p><div class="personal-panel"><div class="personal-row"><span>观看状态</span><div class="watch-controls" id="watchControls"><button type="button" data-watch-status="watched">已看</button><button type="button" data-watch-status="unwatched">未看</button><button type="button" data-watch-status="clear">清除</button></div></div><div class="personal-row"><span>我的标星</span><div class="star-controls" id="starControls"><button type="button" data-rating="1" aria-label="1 星"><i data-lucide="star"></i></button><button type="button" data-rating="2" aria-label="2 星"><i data-lucide="star"></i></button><button type="button" data-rating="3" aria-label="3 星"><i data-lucide="star"></i></button><button type="button" data-rating="4" aria-label="4 星"><i data-lucide="star"></i></button><button type="button" data-rating="5" aria-label="5 星"><i data-lucide="star"></i></button></div></div><div class="local-notes"><div class="notes-heading"><span>读者点评</span><small>仅保存在此设备</small></div><form id="noteForm"><textarea id="noteInput" maxlength="500" placeholder="写下你的看法"></textarea><button type="submit">保存笔记</button></form><div id="noteList"></div></div></div><div class="dialog-bottom"><button class="save-dialog" id="dialogSave" type="button"><i data-lucide="bookmark"></i><span>加入我的清单</span></button><span class="dialog-score" id="dialogScore"></span><a class="go-source" id="dialogLink" href="#" target="_blank" rel="noopener"><span id="dialogLinkLabel">打开中文资料</span><i data-lucide="arrow-up-right"></i></a></div></div>
     </article>
   </div>
 
