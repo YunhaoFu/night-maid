@@ -50,8 +50,8 @@ a { color: inherit; text-decoration: none; }
 .scroll-line { width: 1px; height: 48px; background: linear-gradient(var(--red), transparent); }
 
 main { position: relative; z-index: 2; }
-.quote-band { min-height: 310px; display: grid; place-items: center; padding: 64px clamp(24px, 12vw, 220px); background: var(--paper); color: var(--ink); }
-.book-quote { max-width: 860px; margin: 0; text-align: center; font: 400 clamp(30px, 4.6vw, 66px)/1.25 "Instrument Serif", "Noto Serif SC", serif; }
+.quote-band { min-height: 196px; display: grid; place-items: center; padding: 46px clamp(24px, 12vw, 220px); background: var(--paper); color: var(--ink); }
+.book-quote { max-width: 720px; margin: 0; border-inline: 1px solid rgba(16,20,21,.22); padding: 4px 30px; text-align: center; font: 400 clamp(22px, 2.4vw, 34px)/1.65 "Instrument Serif", "Noto Serif SC", serif; }
 
 .library { padding: 88px clamp(20px, 6vw, 96px) 110px; background: var(--ink); }
 .section-head { display: flex; align-items: end; justify-content: space-between; gap: 24px; max-width: 1240px; margin: 0 auto 30px; }
@@ -149,9 +149,6 @@ main { position: relative; z-index: 2; }
 .guestbook-form label { font: 11px "DM Mono", monospace; letter-spacing: .08em; }
 .guestbook-form textarea { min-height: 156px; width: 100%; resize: vertical; border: 1px solid rgba(16,20,21,.45); border-radius: 0; outline: 0; padding: 14px; background: rgba(255,255,255,.24); color: var(--ink); font: 15px/1.8 "Noto Serif SC", serif; }
 .guestbook-form textarea:focus { border-color: var(--red-deep); background: rgba(255,255,255,.4); }
-.mailer-row { display: flex; align-items: center; gap: 10px; }
-.mailer-row label { margin-right: 0; }
-.mailer-row select { min-width: 100px; border: 1px solid rgba(16,20,21,.45); border-radius: 0; outline: 0; padding: 9px 8px; background: rgba(255,255,255,.24); color: var(--ink); font: 10px "DM Mono", monospace; }
 .guestbook-form button { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--ink); background: var(--ink); padding: 11px 13px; color: var(--paper); cursor: pointer; font: 11px "DM Mono", monospace; letter-spacing: .06em; }
 .guestbook-form button svg { width: 14px; color: var(--amber); }
 .guestbook-list { display: grid; gap: 1px; border-top: 1px solid rgba(16,20,21,.35); }
@@ -182,21 +179,21 @@ footer { display: flex; justify-content: space-between; gap: 20px; padding: 17px
 
 .modal { position: fixed; z-index: 20; inset: 0; display: none; align-items: end; justify-content: center; padding: clamp(14px,3vw,34px); background: rgba(2,3,3,.76); backdrop-filter: blur(8px); }
 .modal.open { display: flex; }
-.dialog { width: min(950px, 100%); max-height: calc(100svh - 68px); position: relative; display: grid; grid-template-columns: 39% 61%; overflow: auto; background: var(--paper); color: var(--ink); box-shadow: 0 28px 90px rgba(0,0,0,.6); animation: arrive .28s ease-out; }
+.dialog { width: min(1040px, 100%); max-height: calc(100svh - 68px); position: relative; display: grid; grid-template-columns: minmax(280px, 34%) minmax(0, 66%); overflow: auto; background: var(--paper); color: var(--ink); box-shadow: 0 28px 90px rgba(0,0,0,.6); animation: arrive .28s ease-out; }
 @keyframes arrive { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
-.dialog-art { position: relative; min-height: 350px; overflow: hidden; background: #263031; }
+.dialog-art { position: sticky; top: 0; min-height: 100%; overflow: hidden; background: #263031; }
 .dialog-art::before { content: ""; position: absolute; inset: 0; background-image: var(--dialog-art); background-size: cover; background-position: center; filter: grayscale(.5) contrast(1.08); }
 .dialog-art::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(8,10,11,.66), transparent 60%); }
 .dialog-code { position: absolute; z-index: 1; left: 18px; bottom: 16px; color: white; font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: .09em; }
-.dialog-body { display: flex; flex-direction: column; padding: 46px clamp(24px,5vw,56px) 34px; }
+.dialog-body { min-width: 0; display: flex; flex-direction: column; padding: 42px clamp(28px,4vw,54px) 30px; }
 .close { position: absolute; z-index: 2; top: 0; right: 0; display: grid; width: 42px; height: 42px; place-items: center; border: 0; background: var(--red); color: white; cursor: pointer; }
 .close svg { width: 19px; }
 .dialog-meta { color: var(--red-deep); font-family: "DM Mono", monospace; font-size: 10px; letter-spacing: .1em; }
-.dialog h2 { margin: 18px 0 7px; padding-right: 24px; font-family: "Instrument Serif", "Noto Serif SC", serif; font-size: clamp(40px,5vw,63px); font-weight: 400; line-height: .88; }
+.dialog h2 { margin: 15px 0 7px; padding-right: 28px; font-family: "Instrument Serif", "Noto Serif SC", serif; font-size: clamp(38px,4vw,58px); font-weight: 400; line-height: .94; }
 .dialog-original { color: #586160; font-family: "DM Mono", monospace; font-size: 10px; }
-.dialog-summary { margin: 26px 0; font-family: "Noto Serif SC", serif; font-size: 14px; line-height: 1.95; }
-.personal-panel { border-top: 1px solid rgba(16,20,21,.2); padding-top: 17px; }
-.personal-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 13px; font: 11px "DM Mono", monospace; letter-spacing: .05em; }
+.dialog-summary { max-width: 610px; margin: 25px 0 28px; font-family: "Noto Serif SC", serif; font-size: 14px; line-height: 1.9; }
+.personal-panel { border-top: 1px solid rgba(16,20,21,.22); padding-top: 17px; }
+.personal-row { display: grid; grid-template-columns: 104px minmax(0, 1fr); align-items: center; gap: 16px; margin-bottom: 14px; font: 11px "DM Mono", monospace; letter-spacing: .05em; }
 .watch-controls, .star-controls { display: flex; align-items: center; gap: 4px; }
 .watch-controls button { border: 1px solid rgba(16,20,21,.35); background: transparent; padding: 6px 8px; color: #3d4847; cursor: pointer; font: 10px "DM Mono", monospace; }
 .watch-controls button.active { border-color: var(--red-deep); background: var(--red-deep); color: white; }
@@ -204,16 +201,15 @@ footer { display: flex; justify-content: space-between; gap: 20px; padding: 17px
 .star-controls button svg { width: 16px; }
 .star-controls button.active { color: var(--amber); }
 .star-controls button.active svg { fill: currentColor; }
-.local-notes { border-top: 1px solid rgba(16,20,21,.18); margin-top: 18px; padding-top: 15px; }
+.local-notes { border-top: 1px solid rgba(16,20,21,.2); margin-top: 22px; padding-top: 16px; }
 .notes-heading { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 9px; font: 11px "DM Mono", monospace; letter-spacing: .05em; }
 .notes-heading small { color: #6f7775; font-size: 9px; }
-#noteForm { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
-#noteInput { min-height: 42px; max-height: 110px; resize: vertical; border: 1px solid rgba(16,20,21,.3); border-radius: 0; outline: 0; padding: 8px; background: transparent; color: var(--ink); font-size: 12px; }
-#noteForm button { align-self: start; border: 1px solid var(--ink); background: var(--ink); padding: 9px 10px; color: var(--paper); cursor: pointer; font: 10px "DM Mono", monospace; }
-.note-item { position: relative; margin-top: 10px; border-left: 2px solid var(--red); padding-left: 9px; color: #303a39; font: 12px/1.7 "Noto Serif SC", serif; }
-.note-item button { position: absolute; right: 0; top: 0; border: 0; background: transparent; color: #6f7775; cursor: pointer; font: 10px "DM Mono", monospace; }
-.dialog-bottom { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; }
-.dialog-score { color: var(--red-deep); font-family: "DM Mono", monospace; font-size: 12px; }
+#noteForm { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+#noteInput { min-height: 56px; max-height: 120px; resize: vertical; border: 1px solid rgba(16,20,21,.3); border-radius: 0; outline: 0; padding: 10px; background: transparent; color: var(--ink); font-size: 12px; }
+#noteForm button { align-self: stretch; border: 1px solid var(--ink); background: var(--ink); padding: 9px 11px; color: var(--paper); cursor: pointer; font: 10px "DM Mono", monospace; }
+.note-item { margin-top: 10px; border-left: 2px solid var(--red); padding-left: 10px; color: #303a39; font: 12px/1.75 "Noto Serif SC", serif; }
+.dialog-bottom { display: flex; align-items: center; gap: 12px; margin-top: 28px; border-top: 1px solid rgba(16,20,21,.22); padding-top: 18px; }
+.dialog-score { margin-left: auto; color: var(--red-deep); font-family: "DM Mono", monospace; font-size: 12px; }
 .save-dialog { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--red-deep); background: transparent; padding: 9px 10px; color: var(--red-deep); cursor: pointer; font: 10px "DM Mono", monospace; }
 .save-dialog.is-saved { background: var(--red-deep); color: white; }
 .save-dialog svg { width: 14px; }
@@ -233,8 +229,8 @@ footer { display: flex; justify-content: space-between; gap: 20px; padding: 17px
   .hero-inner { padding: 125px 24px 35px; }
   .hero h1 { font-size: 52px; }
   .hero-bottom { margin-top: 39px; }
-  .quote-band { min-height: 230px; padding: 54px 24px; }
-  .book-quote { font-size: 38px; }
+  .quote-band { min-height: 170px; padding: 38px 24px; }
+  .book-quote { padding-inline: 18px; font-size: 24px; }
   .paths-intro, .guestbook-inner { grid-template-columns: 1fr; gap: 32px; padding: 67px 24px; }
   .library { padding: 62px 18px 72px; }
   .section-head { align-items: start; flex-direction: column; gap: 18px; }
@@ -253,16 +249,15 @@ footer { display: flex; justify-content: space-between; gap: 20px; padding: 17px
   .paths, .guestbook { padding: 67px 24px; }
   .guestbook-inner { padding: 0; }
   .guestbook h2 { font-size: 56px; }
-  .mailer-row { flex-wrap: wrap; }
-  .mailer-row button { margin-left: auto; }
   .guest-reply-form { grid-template-columns: 1fr; }
   .guest-reply-form button { justify-self: start; }
   .path { grid-template-columns: 46px 1fr auto; gap: 10px; }
   .path-items { display: none; }
   .dialog { grid-template-columns: 1fr; max-height: calc(100svh - 28px); overflow: auto; }
-  .dialog-art { min-height: 210px; }
+  .dialog-art { position: relative; min-height: 210px; }
   .dialog-body { padding: 30px 24px 28px; }
   .dialog-summary { margin: 18px 0 26px; }
+  .personal-row { grid-template-columns: 1fr; gap: 9px; }
   #noteForm { grid-template-columns: 1fr; }
   #noteForm button { justify-self: start; }
   .dialog-bottom { flex-wrap: wrap; }

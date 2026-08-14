@@ -15,25 +15,44 @@ const empty = document.getElementById('emptyState');
 const modal = document.getElementById('modal');
 const filterStatus = document.getElementById('filterStatus');
 const filterStatusText = document.getElementById('filterStatusText');
+const apiPath = '/api/community';
 const state = { media: 'all', watch: 'all', query: '', savedOnly: false };
 const storageKeys = {
   saved: 'night-maid-saved',
   watch: 'night-maid-watch-state',
   ratings: 'night-maid-ratings',
   notes: 'night-maid-notes',
-  guestbook: 'night-maid-guestbook'
+  guestbook: 'night-maid-guestbook',
+  visitor: 'night-maid-visitor'
 };
 
-let saved = new Set(JSON.parse(localStorage.getItem(storageKeys.saved) || localStorage.getItem('night-index-saved') || '[]'));
-let watchState = JSON.parse(localStorage.getItem(storageKeys.watch) || '{}');
-let ratings = JSON.parse(localStorage.getItem(storageKeys.ratings) || '{}');
-let notes = JSON.parse(localStorage.getItem(storageKeys.notes) || '{}');
-let guestbookEntries = JSON.parse(localStorage.getItem(storageKeys.guestbook) || '[]');
+function readStored(key, fallback) {
+  try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); } catch { return fallback; }
+}
+function newId() {
+  return globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+function storedVisitor() {
+  const existing = localStorage.getItem(storageKeys.visitor);
+  if (existing && /^[a-zA-Z0-9-]{16,80}$/.test(existing)) return existing;
+  const id = newId();
+  localStorage.setItem(storageKeys.visitor, id);
+  return id;
+}
+
+let saved = new Set(readStored(storageKeys.saved, readStored('night-index-saved', [])));
+let watchState = readStored(storageKeys.watch, {});
+let ratings = readStored(storageKeys.ratings, {});
+let notes = readStored(storageKeys.notes, {});
+let guestbookEntries = readStored(storageKeys.guestbook, []);
+let recordCommunity = {};
 let posterObserver = null;
 let activeRecordId = null;
 let lastTrigger = null;
+const visitor = storedVisitor();
 
 function icon(name) { return `<i data-lucide="${name}"></i>`; }
+function refreshIcons() { window.lucide?.createIcons(); }
 function typeCode(type) { return ({ film: 'FILM', series: 'SERIES', anime: 'ANIMATION', book: 'PRINT', manga: 'MANGA', game: 'GAME' })[type]; }
 function coverFor(record) { return covers[record.id]?.src || ''; }
 function recordById(id) { return records.find(record => record.id === id); }
@@ -52,6 +71,17 @@ function persist() {
   localStorage.setItem(storageKeys.guestbook, JSON.stringify(guestbookEntries));
 }
 function updateSavedCount() { document.getElementById('savedCount').textContent = saved.size; }
+async function communityRequest(method, query, body) {
+  const url = new URL(apiPath, window.location.origin);
+  Object.entries(query || {}).forEach(([key, value]) => url.searchParams.set(key, value));
+  const response = await fetch(url, {
+    method,
+    headers: body ? { 'content-type': 'application/json' } : undefined,
+    body: body ? JSON.stringify({ ...body, visitor }) : undefined
+  });
+  if (!response.ok) throw new Error(`Community request failed: ${response.status}`);
+  return response.json();
+}
 function attachPoster(node) {
   const record = recordById(node.dataset.posterId);
   if (!record || node.dataset.loading) return;
@@ -77,15 +107,13 @@ function loadVisiblePosters() {
   nodes.forEach(node => posterObserver.observe(node));
 }
 function setManifesto() {
-  const selected = bookQuotes[Math.floor(Math.random() * bookQuotes.length)] || '';
-  document.getElementById('bookQuote').textContent = selected;
+  document.getElementById('bookQuote').textContent = bookQuotes[Math.floor(Math.random() * bookQuotes.length)] || '';
 }
 function setFeaturedRecord() {
   const picks = ['cure', 'silence', 'twinpeaks', 'perfectblue', 'houseleaves', 'ringu', 'monster', 'hereditary', 'silenthill2', 'rebecca'];
   const record = recordById(picks[Math.floor(Math.random() * picks.length)]) || records[0];
   const photo = document.getElementById('featurePhoto');
-  const source = coverFor(record) || art[record.art];
-  photo.style.setProperty('--feature-art', `url('${source}')`);
+  photo.style.setProperty('--feature-art', `url('${coverFor(record) || art[record.art]}')`);
   document.getElementById('featureNumber').textContent = `${typeCode(record.type)} / ${record.year}`;
   document.getElementById('featureTitle').textContent = record.title;
   document.getElementById('featureCopy').textContent = record.summary;
@@ -94,6 +122,7 @@ function setFeaturedRecord() {
   document.getElementById('featureTags').innerHTML = record.tags.split(' ').map(tag => `<span>${escapeHtml(tag)}</span>`).join('');
   document.getElementById('featureCredit').textContent = `COVER / ${covers[record.id]?.provider || 'ARCHIVE'}`;
   document.getElementById('featureOpen').dataset.recordId = record.id;
+  refreshIcons();
 }
 function activeFilterLabels() {
   const labels = [];
@@ -119,14 +148,13 @@ function draw() {
   grid.innerHTML = shown.map((record, index) => {
     const status = watchState[record.id];
     const statusLabel = ({ watched: '已看', unwatched: '未看', 'to-watch': '待看' })[status] || '';
-    return `
-      <article class="entry" tabindex="0" data-id="${record.id}" style="--art: url('${art[record.art]}')" aria-label="查看 ${record.title} 详情">
-        <div class="entry-poster" data-poster-id="${record.id}"><img alt="${record.title} 封面" decoding="async" referrerpolicy="no-referrer"></div>
-        ${statusLabel ? `<span class="entry-status ${status}">${statusLabel}</span>` : ''}
-        <div class="entry-top"><span class="entry-type">${typeCode(record.type)} / ${String(index + 1).padStart(2, '0')}</span><span class="entry-year">${record.year}</span></div>
-        <div><h4 class="entry-title">${record.title}</h4><div class="entry-original">${record.original}</div></div>
-        <div class="entry-bottom"><span class="entry-score">${record.score}</span><span class="entry-signal">${record.signal}</span><button class="save-entry ${saved.has(record.id) ? 'is-saved' : ''}" type="button" data-save="${record.id}" title="${saved.has(record.id) ? '从我的清单移除' : '加入我的清单'}" aria-label="${saved.has(record.id) ? '从我的清单移除' : '加入我的清单'} ${record.title}">${icon('bookmark')}</button></div>
-      </article>`;
+    return `<article class="entry" tabindex="0" data-id="${record.id}" style="--art: url('${art[record.art]}')" aria-label="查看 ${record.title} 详情">
+      <div class="entry-poster" data-poster-id="${record.id}"><img alt="${record.title} 封面" decoding="async" referrerpolicy="no-referrer"></div>
+      ${statusLabel ? `<span class="entry-status ${status}">${statusLabel}</span>` : ''}
+      <div class="entry-top"><span class="entry-type">${typeCode(record.type)} / ${String(index + 1).padStart(2, '0')}</span><span class="entry-year">${record.year}</span></div>
+      <div><h4 class="entry-title">${record.title}</h4><div class="entry-original">${record.original}</div></div>
+      <div class="entry-bottom"><span class="entry-score">${record.score}</span><span class="entry-signal">${record.signal}</span><button class="save-entry ${saved.has(record.id) ? 'is-saved' : ''}" type="button" data-save="${record.id}" title="${saved.has(record.id) ? '从我的清单移除' : '加入我的清单'}" aria-label="${saved.has(record.id) ? '从我的清单移除' : '加入我的清单'} ${record.title}">${icon('bookmark')}</button></div>
+    </article>`;
   }).join('');
   empty.style.display = shown.length ? 'none' : 'block';
   empty.textContent = state.savedOnly ? '还没有加入清单的作品。可使用卡片右下角的书签，或在详情页加入。' : '未找到相符作品。请更换关键词或清除筛选。';
@@ -134,7 +162,7 @@ function draw() {
   document.querySelectorAll('.filter').forEach(button => button.classList.toggle('active', button.dataset.filter === state.media));
   document.querySelectorAll('.watch-filter').forEach(button => button.classList.toggle('active', button.dataset.watchFilter === state.watch));
   updateFilterStatus();
-  lucide.createIcons();
+  refreshIcons();
   loadVisiblePosters();
 }
 function toggleSaved(id) {
@@ -156,6 +184,16 @@ function setRating(id, rating) {
   if (!ratings[id]) delete ratings[id];
   persist();
   renderPersonalControls(recordById(id));
+  communityRequest('POST', null, { action: 'record:rating', record: id, rating: ratings[id] || 0 })
+    .then(data => {
+      recordCommunity[id] = data;
+      if (activeRecordId === id) renderPersonalControls(recordById(id));
+    })
+    .catch(() => {});
+}
+function communityLabel(data) {
+  if (!data || !data.rating?.count) return '暂无标星';
+  return `${data.rating.average.toFixed(1)} / ${data.rating.count} 人`;
 }
 function renderPersonalControls(record) {
   if (!record) return;
@@ -168,12 +206,19 @@ function renderPersonalControls(record) {
   const savedHere = saved.has(record.id);
   saveButton.classList.toggle('is-saved', savedHere);
   saveButton.querySelector('span').textContent = savedHere ? '已加入我的清单' : '加入我的清单';
-  const recordNotes = notes[record.id] || [];
-  document.getElementById('noteList').innerHTML = recordNotes.map(note => `<div class="note-item">${escapeHtml(note.text)}<button type="button" data-delete-note="${note.id}" aria-label="删除笔记">删除</button></div>`).join('');
+  const community = recordCommunity[record.id];
+  const recordNotes = community?.comments || notes[record.id] || [];
+  document.getElementById('communityRating').textContent = communityLabel(community);
+  document.getElementById('noteList').innerHTML = recordNotes.map(note => `<div class="note-item">${escapeHtml(note.text)}</div>`).join('');
+}
+async function loadRecordCommunity(id) {
+  try {
+    recordCommunity[id] = await communityRequest('GET', { scope: 'record', record: id, visitor });
+    if (activeRecordId === id) renderPersonalControls(recordById(id));
+  } catch {}
 }
 function setDialogPoster(record) {
-  const dialogArt = document.getElementById('dialogArt');
-  dialogArt.style.setProperty('--dialog-art', `url('${coverFor(record) || art[record.art]}')`);
+  document.getElementById('dialogArt').style.setProperty('--dialog-art', `url('${coverFor(record) || art[record.art]}')`);
 }
 function openRecord(id, trigger) {
   const record = recordById(id);
@@ -194,15 +239,16 @@ function openRecord(id, trigger) {
   modal.classList.add('open');
   modal.setAttribute('aria-hidden', 'false');
   document.body.classList.add('modal-open');
-  lucide.createIcons();
+  refreshIcons();
   document.getElementById('closeModal').focus();
+  void loadRecordCommunity(record.id);
 }
 function closeModal() {
   activeRecordId = null;
   modal.classList.remove('open');
   modal.setAttribute('aria-hidden', 'true');
   document.body.classList.remove('modal-open');
-  if (lastTrigger) lastTrigger.focus();
+  lastTrigger?.focus();
 }
 function clearFilters() {
   state.media = 'all';
@@ -221,39 +267,24 @@ function showSaved() {
   draw();
   document.getElementById('catalogue').scrollIntoView({ behavior: 'smooth' });
 }
-function saveNote(event) {
+async function saveNote(event) {
   event.preventDefault();
   if (!activeRecordId) return;
   const input = document.getElementById('noteInput');
-  const text = input.value.trim();
-  if (!text) return;
-  const recordNotes = notes[activeRecordId] || [];
-  recordNotes.unshift({ id: `${Date.now()}-${Math.random().toString(16).slice(2)}`, text });
-  notes[activeRecordId] = recordNotes.slice(0, 20);
-  persist();
+  const message = input.value.trim();
+  if (!message) return;
   input.value = '';
+  try {
+    recordCommunity[activeRecordId] = await communityRequest('POST', null, { action: 'record:comment', record: activeRecordId, message });
+    delete notes[activeRecordId];
+  } catch {
+    const fallback = notes[activeRecordId] || [];
+    fallback.unshift({ id: newId(), text: message });
+    notes[activeRecordId] = fallback.slice(0, 20);
+  }
+  persist();
   renderPersonalControls(recordById(activeRecordId));
 }
-function sendGuestbook(event) {
-  event.preventDefault();
-  const form = event.currentTarget;
-  const message = document.getElementById('guestbookMessage').value.trim();
-  if (!message) return;
-  guestbookEntries.unshift({ id: `${Date.now()}-${Math.random().toString(16).slice(2)}`, message, likes: 0, liked: false, replies: [] });
-  guestbookEntries = guestbookEntries.slice(0, 50);
-  persist();
-  renderGuestbook();
-  const recipient = form.dataset.email;
-  const mailer = document.getElementById('mailer').value;
-  const messageParams = new URLSearchParams({ to: recipient, su: 'night-maid / 留言', body: message });
-  const mailtoParams = new URLSearchParams({ subject: 'night-maid / 留言', body: message });
-  const destination = mailer === 'gmail'
-    ? `https://mail.google.com/mail/u/0/?${messageParams.toString()}&tf=cm`
-    : `mailto:${recipient}?${mailtoParams.toString()}`;
-  form.reset();
-  window.open(destination, '_blank', 'noopener,noreferrer');
-}
-
 function renderGuestbook() {
   const guestbookList = document.getElementById('guestbookList');
   guestbookList.innerHTML = guestbookEntries.map(entry => {
@@ -268,10 +299,33 @@ function renderGuestbook() {
       <div class="guest-replies">${replies.map(reply => `<div class="guest-reply">${escapeHtml(reply.text)}</div>`).join('')}</div>
     </article>`;
   }).join('');
-  lucide.createIcons();
+  refreshIcons();
 }
-
-function updateGuestbook(event) {
+async function loadGuestbook() {
+  try {
+    const data = await communityRequest('GET', { scope: 'guestbook', visitor });
+    guestbookEntries = data.entries;
+    persist();
+    renderGuestbook();
+  } catch {}
+}
+async function sendGuestbook(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const message = document.getElementById('guestbookMessage').value.trim();
+  if (!message) return;
+  try {
+    const data = await communityRequest('POST', null, { action: 'guestbook:create', message });
+    guestbookEntries = data.entries;
+  } catch {
+    guestbookEntries.unshift({ id: newId(), message, likes: 0, liked: false, replies: [] });
+    guestbookEntries = guestbookEntries.slice(0, 50);
+  }
+  persist();
+  form.reset();
+  renderGuestbook();
+}
+async function updateGuestbook(event) {
   const likeButton = event.target.closest('[data-guest-like]');
   const replyToggle = event.target.closest('[data-guest-reply-toggle]');
   if (likeButton) {
@@ -279,6 +333,11 @@ function updateGuestbook(event) {
     if (!entry) return;
     entry.liked = !entry.liked;
     entry.likes = Math.max(0, (entry.likes || 0) + (entry.liked ? 1 : -1));
+    renderGuestbook();
+    try {
+      const data = await communityRequest('POST', null, { action: 'guestbook:like', id: entry.id });
+      guestbookEntries = data.entries;
+    } catch {}
     persist();
     renderGuestbook();
     return;
@@ -288,17 +347,21 @@ function updateGuestbook(event) {
     if (form) form.hidden = !form.hidden;
   }
 }
-
-function saveGuestReply(event) {
+async function saveGuestReply(event) {
   const form = event.target.closest('[data-guest-reply-form]');
   if (!form) return;
   event.preventDefault();
   const input = form.querySelector('input');
-  const text = input.value.trim();
+  const message = input.value.trim();
   const entry = guestbookEntries.find(item => item.id === form.dataset.guestReplyForm);
-  if (!text || !entry) return;
-  entry.replies = entry.replies || [];
-  entry.replies.push({ id: `${Date.now()}-${Math.random().toString(16).slice(2)}`, text });
+  if (!message || !entry) return;
+  try {
+    const data = await communityRequest('POST', null, { action: 'guestbook:reply', id: entry.id, message });
+    guestbookEntries = data.entries;
+  } catch {
+    entry.replies = entry.replies || [];
+    entry.replies.push({ id: newId(), text: message });
+  }
   persist();
   renderGuestbook();
 }
@@ -330,13 +393,7 @@ modal.addEventListener('click', event => {
   const watchButton = event.target.closest('[data-watch-status]');
   if (watchButton && activeRecordId) { setWatchStatus(activeRecordId, watchButton.dataset.watchStatus); return; }
   const ratingButton = event.target.closest('[data-rating]');
-  if (ratingButton && activeRecordId) { setRating(activeRecordId, Number(ratingButton.dataset.rating)); return; }
-  const deleteButton = event.target.closest('[data-delete-note]');
-  if (deleteButton && activeRecordId) {
-    notes[activeRecordId] = (notes[activeRecordId] || []).filter(note => note.id !== deleteButton.dataset.deleteNote);
-    persist();
-    renderPersonalControls(recordById(activeRecordId));
-  }
+  if (ratingButton && activeRecordId) { setRating(activeRecordId, Number(ratingButton.dataset.rating)); }
 });
 document.addEventListener('keydown', event => { if (event.key === 'Escape' && modal.classList.contains('open')) closeModal(); });
 window.addEventListener('mousemove', event => { const light = document.querySelector('.cursor-light'); light.style.left = `${event.clientX}px`; light.style.top = `${event.clientY}px`; });
@@ -347,3 +404,4 @@ persist();
 updateSavedCount();
 draw();
 renderGuestbook();
+void loadGuestbook();
