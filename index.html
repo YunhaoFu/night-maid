@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101415">
+  <meta name="description" content="00:13 是一份中文夜间看片簿，收录电影、剧集、动画、小说、漫画与游戏。">
+  <meta property="og:title" content="00:13 | 夜间看片簿">
+  <meta property="og:description" content="80 个编辑条目，按媒介、场景和叙事方式整理。">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1620342484818-f709dda63d20?auto=format&fit=crop&fm=jpg&ixlib=rb-4.1.0&q=85&w=1200">
+  <title>00:13 | 夜间看片簿</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Noto+Serif+SC:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <a class="skip" href="#catalogue">进入馆藏</a>
+  <div class="grain"></div>
+  <div class="cursor-light" aria-hidden="true"></div>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="00:13 返回顶部"><span class="brand-mark">13</span><span>00:13 / NIGHT INDEX</span></a>
+    <nav class="header-nav" aria-label="页面导航">
+      <a href="#catalogue">馆藏</a>
+      <a href="#paths">主题路径</a>
+      <button class="archive-button" id="savedButton" type="button" aria-label="查看已留档条目"><i data-lucide="bookmark"></i> 留档 <span class="archive-count" id="savedCount">0</span></button>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-grid"></div>
+      <div class="hero-inner">
+        <p class="eyebrow">CURATED SCREENING NOTES / ISSUE 01</p>
+        <h1 id="hero-title">夜间<br><em>看片簿。</em></h1>
+        <p class="hero-copy">电影、剧集、动画、小说、漫画和游戏。给还想认真看完一部作品的人，也给不想再在首页里来回划的人。</p>
+        <div class="hero-bottom">
+          <div class="time-readout"><span>00:13</span><small>ISSUE 01 / 80 WORKS</small></div>
+          <div class="scroll-note"><span>继续浏览</span><span class="scroll-line"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="intro-band">
+      <h2 class="intro-title">不是榜单。<br>是一份<br><i>有偏向的清单。</i></h2>
+      <div class="intro-side">
+        <p>分数只是起点。我们更在意一部作品怎样建立悬念、使用空间、处理人物，以及它是否值得把注意力交出去两个小时。</p>
+        <div class="source-note"><b>80 个编辑条目</b><br>电影 / 长剧 / 动画 / 小说 / 漫画 / 游戏<br>评分为常见社群口碑参考，可能随时间浮动。</div>
+      </div>
+    </section>
+
+    <section class="library" id="catalogue" aria-labelledby="catalogue-title">
+      <div class="section-head">
+        <div><div class="section-index">01 / THE COLLECTION</div><h2 class="section-title" id="catalogue-title">从哪一扇门进去？</h2></div>
+        <p class="collection-meta">按媒介、场景和叙事方式整理。你可以从熟悉的标题开始，也可以让一张封面带路。</p>
+      </div>
+      <div class="filters" role="search">
+        <label class="search-wrap" for="search"><i data-lucide="search"></i><input id="search" type="search" autocomplete="off" placeholder="输入片名、人名、线索，例如：雨夜 / 失踪 / 村庄"></label>
+        <div class="filter-list" aria-label="媒介筛选">
+          <button class="filter active" data-filter="all" type="button">全部</button>
+          <button class="filter" data-filter="film" type="button">电影</button>
+          <button class="filter" data-filter="series" type="button">剧集</button>
+          <button class="filter" data-filter="anime" type="button">动画</button>
+          <button class="filter" data-filter="book" type="button">小说</button>
+          <button class="filter" data-filter="manga" type="button">漫画</button>
+          <button class="filter" data-filter="game" type="button">游戏</button>
+        </div>
+      </div>
+      <div class="filter-status" id="filterStatus" hidden><span id="filterStatusText"></span><button class="clear-filters" id="clearFilters" type="button">回到全部馆藏</button></div>
+
+      <article class="feature-grid" aria-label="本夜优先档案">
+        <div class="feature-copy">
+          <div><div class="feature-number">SHELF A / 1997</div><h3>为什么是<br>CURE</h3><p>黑泽清把一宗连环案件拍成缓慢失焦的日常。刑警越接近嫌疑人，周围的人越像换了另一种说话方式。</p></div>
+          <button class="detail-link" type="button" data-open="cure">查看条目 <i data-lucide="arrow-up-right"></i></button>
+        </div>
+        <div class="feature-photo"><span class="photo-credit">POSTER / TMDB</span></div>
+        <div class="feature-annotation"><div><div class="rating"><i data-lucide="star"></i> 7.4 / 10</div><p class="annotation-label">EDITOR'S PICK</p><p class="annotation">没有夸张剪辑，也很少解释。它靠停顿、构图和一再重复的问题，把不安留在画面之外。</p></div><div class="feature-tags"><span>刑警</span><span>失忆</span><span>东京</span><span>黑泽清</span></div></div>
+      </article>
+
+      <div class="catalogue">
+        <div class="catalogue-heading"><h3>ALL RECORDS / RECORD INDEX</h3><span class="result-count" id="resultCount">80 条记录</span></div>
+        <div class="catalogue-grid" id="catalogueGrid"></div>
+        <div class="empty" id="emptyState">这一层没有匹配卡片。换一个线索，或回到全部馆藏。</div>
+      </div>
+    </section>
+
+    <section class="paths" id="paths" aria-labelledby="paths-title">
+      <div class="paths-intro"><h2 id="paths-title">按<br><em>想看的感觉</em><br>来选。</h2><p>还没有选片目标时，可以从这里开始。四条路径不是严格分类，只是把相近的观看体验放在一起。</p></div>
+      <div class="path-list">
+        <a class="path" href="#catalogue" data-path="sealed"><span class="path-no">A-01</span><span class="path-title">封闭空间</span><span class="path-items">The Thing · The Others · House of Leaves</span><span class="path-arrow"><i data-lucide="arrow-down-right"></i></span></a>
+        <a class="path" href="#catalogue" data-path="town"><span class="path-no">B-04</span><span class="path-title">小镇异闻</span><span class="path-items">Twin Peaks · The Wailing · Higurashi</span><span class="path-arrow"><i data-lucide="arrow-down-right"></i></span></a>
+        <a class="path" href="#catalogue" data-path="mind"><span class="path-no">C-07</span><span class="path-title">身份与记忆</span><span class="path-items">Perfect Blue · Shutter Island · Monster</span><span class="path-arrow"><i data-lucide="arrow-down-right"></i></span></a>
+        <a class="path" href="#catalogue" data-path="detective"><span class="path-no">D-12</span><span class="path-title">调查与谜案</span><span class="path-items">True Detective · The Devotion of Suspect X · Se7en</span><span class="path-arrow"><i data-lucide="arrow-down-right"></i></span></a>
+      </div>
+    </section>
+
+    <section class="finale">
+      <div class="finale-content"><p class="eyebrow">END OF ISSUE 01</p><h2>这份清单<br><em>还会继续长。</em></h2><p>已留档作品只保存在当前浏览器。本页提供资料入口，不提供播放或下载。</p><button class="finale-link" id="finalSaved" type="button"><i data-lucide="bookmark"></i> 我的留档</button></div>
+    </section>
+  </main>
+  <footer><span>00:13 / A CURATED NIGHT INDEX</span><a href="credits.html">编辑与图像说明</a><span>中文资料：豆瓣 / Bangumi · 非播放平台</span></footer>
+
+  <div class="modal" id="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="dialogTitle">
+    <article class="dialog">
+      <button class="close" id="closeModal" type="button" aria-label="关闭详情"><i data-lucide="x"></i></button>
+      <div class="dialog-art" id="dialogArt"><span class="dialog-code" id="dialogCode">ARCHIVE / 000</span></div>
+      <div class="dialog-body"><div class="dialog-meta" id="dialogMeta"></div><h2 id="dialogTitle"></h2><div class="dialog-original" id="dialogOriginal"></div><p class="dialog-summary" id="dialogSummary"></p><div class="dialog-bottom"><span class="dialog-score" id="dialogScore"></span><a class="go-source" id="dialogLink" href="#" target="_blank" rel="noopener"><span id="dialogLinkLabel">打开中文资料</span><i data-lucide="arrow-up-right"></i></a></div></div>
+    </article>
+  </div>
+
+  <script src="data/catalogue.js" defer></script>
+  <script src="data/covers.js" defer></script>
+  <script src="assets/app.js" defer></script>
+</body>
+</html>
