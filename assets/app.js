@@ -7,6 +7,7 @@ const art = {
 
 const records = window.NIGHT_INDEX_RECORDS || [];
 const covers = window.NIGHT_INDEX_COVERS || {};
+const bookQuotes = window.NIGHT_MAID_QUOTES || [];
 const grid = document.getElementById('catalogueGrid');
 const search = document.getElementById('search');
 const resultCount = document.getElementById('resultCount');
@@ -19,13 +20,15 @@ const storageKeys = {
   saved: 'night-maid-saved',
   watch: 'night-maid-watch-state',
   ratings: 'night-maid-ratings',
-  notes: 'night-maid-notes'
+  notes: 'night-maid-notes',
+  guestbook: 'night-maid-guestbook'
 };
 
 let saved = new Set(JSON.parse(localStorage.getItem(storageKeys.saved) || localStorage.getItem('night-index-saved') || '[]'));
 let watchState = JSON.parse(localStorage.getItem(storageKeys.watch) || '{}');
 let ratings = JSON.parse(localStorage.getItem(storageKeys.ratings) || '{}');
 let notes = JSON.parse(localStorage.getItem(storageKeys.notes) || '{}');
+let guestbookEntries = JSON.parse(localStorage.getItem(storageKeys.guestbook) || '[]');
 let posterObserver = null;
 let activeRecordId = null;
 let lastTrigger = null;
@@ -46,6 +49,7 @@ function persist() {
   localStorage.setItem(storageKeys.watch, JSON.stringify(watchState));
   localStorage.setItem(storageKeys.ratings, JSON.stringify(ratings));
   localStorage.setItem(storageKeys.notes, JSON.stringify(notes));
+  localStorage.setItem(storageKeys.guestbook, JSON.stringify(guestbookEntries));
 }
 function updateSavedCount() { document.getElementById('savedCount').textContent = saved.size; }
 function attachPoster(node) {
@@ -73,17 +77,8 @@ function loadVisiblePosters() {
   nodes.forEach(node => posterObserver.observe(node));
 }
 function setManifesto() {
-  const notes = [
-    ['今晚别先睡。', '这页不负责替你选“必看”。它只把值得花时间的东西放到同一张桌上。', '80 部 / 6 种媒介\n分数在角落，偏见在前面。\n每次打开，会换一张便签。'],
-    ['这页不卖“神作”。', '有些作品分数高得合理，有些只是恰好对胃口。把它们放在一起，是为了少刷几次首页。', '收录中 / 80 部\n电影、书和游戏混在一起。\n算法今天休息。'],
-    ['还醒着？', '那就别再看短视频了。挑一部，给它二十分钟；不合适，随时关掉。', '深夜编选 / ISSUE 01\n没有观看顺序。\n也没有标准答案。'],
-    ['别把灯全关了。', '这份清单里有老片、有新作，也有几部很难向别人解释为什么喜欢。', '馆内现有 / 80 部\n媒体不分高低。\n只看你今天想不想看。'],
-    ['先别相信评分。', '分数能帮你绕开一些坑，不能替你判断一部作品会不会留下来。', '编辑便签 / 00:13\n六种媒介，八十个条目。\n慢慢翻。']
-  ];
-  const selected = notes[Math.floor(Math.random() * notes.length)];
-  document.getElementById('manifestoTitle').textContent = selected[0];
-  document.getElementById('manifestoCopy').textContent = selected[1];
-  document.getElementById('manifestoMeta').innerHTML = `<b>${selected[2].split('\n')[0]}</b><br>${selected[2].split('\n').slice(1).join('<br>')}`;
+  const selected = bookQuotes[Math.floor(Math.random() * bookQuotes.length)] || '';
+  document.getElementById('bookQuote').textContent = selected;
 }
 function setFeaturedRecord() {
   const picks = ['cure', 'silence', 'twinpeaks', 'perfectblue', 'houseleaves', 'ringu', 'monster', 'hereditary', 'silenthill2', 'rebecca'];
@@ -103,7 +98,7 @@ function setFeaturedRecord() {
 function activeFilterLabels() {
   const labels = [];
   if (state.media !== 'all') labels.push(document.querySelector(`[data-filter="${state.media}"]`).textContent);
-  if (state.watch !== 'all') labels.push(state.watch === 'watched' ? '已看' : '未看');
+  if (state.watch !== 'all') labels.push(({ watched: '已看', unwatched: '未看', 'to-watch': '待看' })[state.watch]);
   if (state.query) labels.push(`检索：${state.query}`);
   if (state.savedOnly) labels.push('我的清单');
   return labels;
@@ -117,13 +112,13 @@ function draw() {
   const query = state.query.toLowerCase();
   const shown = records.filter(record =>
     (state.media === 'all' || record.type === state.media) &&
-    (state.watch === 'all' || watchState[record.id] === state.watch) &&
+    (state.watch === 'all' || (state.watch === 'unwatched' ? watchState[record.id] !== 'watched' : watchState[record.id] === state.watch)) &&
     (!state.savedOnly || saved.has(record.id)) &&
     `${record.title} ${record.original} ${record.tags} ${record.summary} ${record.year}`.toLowerCase().includes(query)
   );
   grid.innerHTML = shown.map((record, index) => {
     const status = watchState[record.id];
-    const statusLabel = status === 'watched' ? '已看' : status === 'unwatched' ? '未看' : '';
+    const statusLabel = ({ watched: '已看', unwatched: '未看', 'to-watch': '待看' })[status] || '';
     return `
       <article class="entry" tabindex="0" data-id="${record.id}" style="--art: url('${art[record.art]}')" aria-label="查看 ${record.title} 详情">
         <div class="entry-poster" data-poster-id="${record.id}"><img alt="${record.title} 封面" decoding="async" referrerpolicy="no-referrer"></div>
@@ -164,7 +159,10 @@ function setRating(id, rating) {
 }
 function renderPersonalControls(record) {
   if (!record) return;
-  document.querySelectorAll('[data-watch-status]').forEach(button => button.classList.toggle('active', watchState[record.id] === button.dataset.watchStatus));
+  document.querySelectorAll('[data-watch-status]').forEach(button => {
+    const isUnwatched = button.dataset.watchStatus === 'unwatched' && (!watchState[record.id] || watchState[record.id] === 'unwatched');
+    button.classList.toggle('active', isUnwatched || watchState[record.id] === button.dataset.watchStatus);
+  });
   document.querySelectorAll('[data-rating]').forEach(button => button.classList.toggle('active', Number(button.dataset.rating) <= (ratings[record.id] || 0)));
   const saveButton = document.getElementById('dialogSave');
   const savedHere = saved.has(record.id);
@@ -241,8 +239,68 @@ function sendGuestbook(event) {
   const form = event.currentTarget;
   const message = document.getElementById('guestbookMessage').value.trim();
   if (!message) return;
-  const params = new URLSearchParams({ subject: 'night-maid 留言', body: message });
-  window.location.href = `mailto:${form.dataset.email}?${params.toString()}`;
+  guestbookEntries.unshift({ id: `${Date.now()}-${Math.random().toString(16).slice(2)}`, message, likes: 0, liked: false, replies: [] });
+  guestbookEntries = guestbookEntries.slice(0, 50);
+  persist();
+  renderGuestbook();
+  const recipient = form.dataset.email;
+  const mailer = document.getElementById('mailer').value;
+  const messageParams = new URLSearchParams({ to: recipient, su: 'night-maid / 留言', body: message });
+  const mailtoParams = new URLSearchParams({ subject: 'night-maid / 留言', body: message });
+  const destination = mailer === 'gmail'
+    ? `https://mail.google.com/mail/u/0/?${messageParams.toString()}&tf=cm`
+    : `mailto:${recipient}?${mailtoParams.toString()}`;
+  form.reset();
+  window.open(destination, '_blank', 'noopener,noreferrer');
+}
+
+function renderGuestbook() {
+  const guestbookList = document.getElementById('guestbookList');
+  guestbookList.innerHTML = guestbookEntries.map(entry => {
+    const replies = entry.replies || [];
+    return `<article class="guest-entry" data-guest-id="${entry.id}">
+      <p>${escapeHtml(entry.message)}</p>
+      <div class="guest-actions">
+        <button class="guest-action ${entry.liked ? 'is-liked' : ''}" type="button" data-guest-like="${entry.id}" aria-pressed="${entry.liked ? 'true' : 'false'}">${icon('heart')} <span>${entry.likes || 0}</span></button>
+        <button class="guest-action" type="button" data-guest-reply-toggle="${entry.id}">${icon('message-square')} <span>${replies.length || '评论'}</span></button>
+      </div>
+      <form class="guest-reply-form" data-guest-reply-form="${entry.id}" hidden><input maxlength="300" required aria-label="回复留言" placeholder="写下评论"><button type="submit">评论</button></form>
+      <div class="guest-replies">${replies.map(reply => `<div class="guest-reply">${escapeHtml(reply.text)}</div>`).join('')}</div>
+    </article>`;
+  }).join('');
+  lucide.createIcons();
+}
+
+function updateGuestbook(event) {
+  const likeButton = event.target.closest('[data-guest-like]');
+  const replyToggle = event.target.closest('[data-guest-reply-toggle]');
+  if (likeButton) {
+    const entry = guestbookEntries.find(item => item.id === likeButton.dataset.guestLike);
+    if (!entry) return;
+    entry.liked = !entry.liked;
+    entry.likes = Math.max(0, (entry.likes || 0) + (entry.liked ? 1 : -1));
+    persist();
+    renderGuestbook();
+    return;
+  }
+  if (replyToggle) {
+    const form = document.querySelector(`[data-guest-reply-form="${replyToggle.dataset.guestReplyToggle}"]`);
+    if (form) form.hidden = !form.hidden;
+  }
+}
+
+function saveGuestReply(event) {
+  const form = event.target.closest('[data-guest-reply-form]');
+  if (!form) return;
+  event.preventDefault();
+  const input = form.querySelector('input');
+  const text = input.value.trim();
+  const entry = guestbookEntries.find(item => item.id === form.dataset.guestReplyForm);
+  if (!text || !entry) return;
+  entry.replies = entry.replies || [];
+  entry.replies.push({ id: `${Date.now()}-${Math.random().toString(16).slice(2)}`, text });
+  persist();
+  renderGuestbook();
 }
 
 document.querySelectorAll('.filter').forEach(button => button.addEventListener('click', () => { state.media = button.dataset.filter; draw(); }));
@@ -265,6 +323,8 @@ document.getElementById('closeModal').addEventListener('click', closeModal);
 document.getElementById('dialogSave').addEventListener('click', () => activeRecordId && toggleSaved(activeRecordId));
 document.getElementById('noteForm').addEventListener('submit', saveNote);
 document.getElementById('guestbookForm').addEventListener('submit', sendGuestbook);
+document.getElementById('guestbookList').addEventListener('click', updateGuestbook);
+document.getElementById('guestbookList').addEventListener('submit', saveGuestReply);
 modal.addEventListener('click', event => {
   if (event.target === modal) { closeModal(); return; }
   const watchButton = event.target.closest('[data-watch-status]');
@@ -286,3 +346,4 @@ setFeaturedRecord();
 persist();
 updateSavedCount();
 draw();
+renderGuestbook();

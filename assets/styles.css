@@ -50,18 +50,8 @@ a { color: inherit; text-decoration: none; }
 .scroll-line { width: 1px; height: 48px; background: linear-gradient(var(--red), transparent); }
 
 main { position: relative; z-index: 2; }
-.intro-band { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(200px, .6fr); gap: 64px; padding: 104px clamp(20px, 9vw, 156px); background: var(--paper); color: var(--ink); }
-.manifesto-title-wrap { display: flex; align-items: flex-start; gap: 18px; }
-.intro-title { margin: 0; max-width: 750px; font-family: "Instrument Serif", "Noto Serif SC", serif; font-size: 68px; font-weight: 400; line-height: .98; }
-.intro-title i { color: var(--red-deep); font-style: italic; }
-.blood-badge { position: relative; display: grid; width: 48px; height: 48px; flex: 0 0 auto; place-items: center; border: 1px solid #791927; border-radius: 50%; background: #af2331; color: #f6e7df; box-shadow: inset 0 0 0 4px rgba(17,20,20,.2); font: 12px "DM Mono", monospace; }
-.blood-badge::before, .blood-badge::after { content: ""; position: absolute; bottom: -12px; width: 7px; border-radius: 0 0 8px 8px; background: #af2331; }
-.blood-badge::before { left: 12px; height: 18px; }
-.blood-badge::after { left: 28px; bottom: -7px; height: 12px; }
-.intro-side { border-left: 1px solid rgba(16,20,21,.22); padding-left: 27px; align-self: end; }
-.intro-side p { margin: 0 0 26px; font-family: "Noto Serif SC", serif; font-size: 14px; line-height: 1.9; }
-.source-note { color: #56605e; font-family: "DM Mono", monospace; font-size: 10px; line-height: 1.7; }
-.source-note b { color: var(--red-deep); font-weight: 500; }
+.quote-band { min-height: 310px; display: grid; place-items: center; padding: 64px clamp(24px, 12vw, 220px); background: var(--paper); color: var(--ink); }
+.book-quote { max-width: 860px; margin: 0; text-align: center; font: 400 clamp(30px, 4.6vw, 66px)/1.25 "Instrument Serif", "Noto Serif SC", serif; }
 
 .library { padding: 88px clamp(20px, 6vw, 96px) 110px; background: var(--ink); }
 .section-head { display: flex; align-items: end; justify-content: space-between; gap: 24px; max-width: 1240px; margin: 0 auto 30px; }
@@ -129,7 +119,8 @@ main { position: relative; z-index: 2; }
 .entry-score { color: var(--amber); font-family: "DM Mono", monospace; font-size: 10px; }
 .entry-signal { overflow: hidden; max-width: 104px; color: rgba(233,230,220,.78); text-overflow: ellipsis; white-space: nowrap; text-shadow: 0 1px 7px rgba(0,0,0,.8); font-family: "DM Mono", monospace; font-size: 9px; letter-spacing: .05em; }
 .entry-status { position: absolute; z-index: 3; right: 12px; top: 39px; border: 1px solid var(--cyan); padding: 4px 5px; background: rgba(8,10,11,.48); color: var(--cyan); font: 9px "DM Mono", monospace; letter-spacing: .05em; }
-.entry-status.unwatched { border-color: var(--amber); color: var(--amber); }
+.entry-status.unwatched { border-color: var(--fog); color: var(--fog); }
+.entry-status.to-watch { border-color: var(--amber); color: var(--amber); }
 .save-entry { width: 26px; height: 26px; display: grid; place-items: center; border: 1px solid rgba(233,230,220,.25); background: rgba(8,10,11,.2); cursor: pointer; transition: .2s; }
 .save-entry svg { width: 13px; }
 .save-entry:hover, .save-entry.is-saved { border-color: var(--red); background: var(--red); color: white; }
@@ -152,14 +143,31 @@ main { position: relative; z-index: 2; }
 .guestbook-inner { display: grid; grid-template-columns: .9fr 1.1fr; gap: 80px; max-width: 1240px; margin: 0 auto; }
 .guestbook-index { margin: 0 0 12px; color: var(--red-deep); font: 11px "DM Mono", monospace; letter-spacing: .1em; }
 .guestbook h2 { margin: 0 0 20px; font: 400 70px/.88 "Instrument Serif", "Noto Serif SC", serif; }
-.guestbook-copy { max-width: 360px; margin: 0 0 26px; font: 15px/2 "Noto Serif SC", serif; }
 .guestbook-email { display: inline-block; border-bottom: 1px solid var(--red-deep); padding-bottom: 6px; color: var(--ink); font: 11px "DM Mono", monospace; }
+.guestbook-content { display: flex; min-width: 0; flex-direction: column; gap: 28px; }
 .guestbook-form { display: flex; flex-direction: column; gap: 12px; align-self: center; border-top: 1px solid rgba(16,20,21,.35); padding-top: 18px; }
 .guestbook-form label { font: 11px "DM Mono", monospace; letter-spacing: .08em; }
 .guestbook-form textarea { min-height: 156px; width: 100%; resize: vertical; border: 1px solid rgba(16,20,21,.45); border-radius: 0; outline: 0; padding: 14px; background: rgba(255,255,255,.24); color: var(--ink); font: 15px/1.8 "Noto Serif SC", serif; }
 .guestbook-form textarea:focus { border-color: var(--red-deep); background: rgba(255,255,255,.4); }
-.guestbook-form button { align-self: flex-end; display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--ink); background: var(--ink); padding: 11px 13px; color: var(--paper); cursor: pointer; font: 11px "DM Mono", monospace; letter-spacing: .06em; }
+.mailer-row { display: flex; align-items: center; gap: 10px; }
+.mailer-row label { margin-right: 0; }
+.mailer-row select { min-width: 100px; border: 1px solid rgba(16,20,21,.45); border-radius: 0; outline: 0; padding: 9px 8px; background: rgba(255,255,255,.24); color: var(--ink); font: 10px "DM Mono", monospace; }
+.guestbook-form button { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--ink); background: var(--ink); padding: 11px 13px; color: var(--paper); cursor: pointer; font: 11px "DM Mono", monospace; letter-spacing: .06em; }
 .guestbook-form button svg { width: 14px; color: var(--amber); }
+.guestbook-list { display: grid; gap: 1px; border-top: 1px solid rgba(16,20,21,.35); }
+.guest-entry { padding: 18px 0; border-bottom: 1px solid rgba(16,20,21,.25); }
+.guest-entry > p { margin: 0 0 13px; color: #1e2827; font: 14px/1.85 "Noto Serif SC", serif; white-space: pre-wrap; }
+.guest-actions { display: flex; align-items: center; gap: 8px; }
+.guest-action { display: inline-flex; align-items: center; gap: 6px; border: 0; border-bottom: 1px solid rgba(16,20,21,.35); padding: 3px 0; background: transparent; color: #596360; cursor: pointer; font: 10px "DM Mono", monospace; }
+.guest-action:hover, .guest-action.is-liked { border-color: var(--red-deep); color: var(--red-deep); }
+.guest-action svg { width: 13px; }
+.guest-action.is-liked svg { fill: currentColor; }
+.guest-reply-form { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-top: 14px; }
+.guest-reply-form[hidden] { display: none; }
+.guest-reply-form input { min-width: 0; border: 1px solid rgba(16,20,21,.35); border-radius: 0; outline: 0; padding: 8px; background: rgba(255,255,255,.2); color: var(--ink); font: 12px "Noto Serif SC", serif; }
+.guest-reply-form button { align-self: auto; margin: 0; padding: 8px 10px; font-size: 10px; }
+.guest-replies { display: grid; gap: 7px; margin-top: 12px; }
+.guest-reply { border-left: 2px solid var(--red-deep); padding-left: 9px; color: #495451; font: 12px/1.7 "Noto Serif SC", serif; white-space: pre-wrap; }
 
 .finale { position: relative; overflow: hidden; min-height: 560px; display: grid; place-items: center; padding: 100px 24px; text-align: center; background: #111719; }
 .finale::before { content: ""; position: absolute; inset: 0; background: url("https://images.unsplash.com/photo-1665166357844-884711bff962?auto=format&fit=crop&fm=jpg&ixlib=rb-4.0.3&q=85&w=2200") center/cover; filter: grayscale(.75) brightness(.28) contrast(1.15); }
@@ -225,10 +233,9 @@ footer { display: flex; justify-content: space-between; gap: 20px; padding: 17px
   .hero-inner { padding: 125px 24px 35px; }
   .hero h1 { font-size: 52px; }
   .hero-bottom { margin-top: 39px; }
-  .intro-band, .paths-intro, .guestbook-inner { grid-template-columns: 1fr; gap: 32px; padding: 67px 24px; }
-  .manifesto-title-wrap { gap: 14px; }
-  .intro-title { font-size: 50px; }
-  .intro-side { padding-left: 18px; }
+  .quote-band { min-height: 230px; padding: 54px 24px; }
+  .book-quote { font-size: 38px; }
+  .paths-intro, .guestbook-inner { grid-template-columns: 1fr; gap: 32px; padding: 67px 24px; }
   .library { padding: 62px 18px 72px; }
   .section-head { align-items: start; flex-direction: column; gap: 18px; }
   .filters { grid-template-columns: 1fr; padding: 8px; }
@@ -246,6 +253,10 @@ footer { display: flex; justify-content: space-between; gap: 20px; padding: 17px
   .paths, .guestbook { padding: 67px 24px; }
   .guestbook-inner { padding: 0; }
   .guestbook h2 { font-size: 56px; }
+  .mailer-row { flex-wrap: wrap; }
+  .mailer-row button { margin-left: auto; }
+  .guest-reply-form { grid-template-columns: 1fr; }
+  .guest-reply-form button { justify-self: start; }
   .path { grid-template-columns: 46px 1fr auto; gap: 10px; }
   .path-items { display: none; }
   .dialog { grid-template-columns: 1fr; max-height: calc(100svh - 28px); overflow: auto; }

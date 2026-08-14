@@ -43,12 +43,8 @@
       </div>
     </section>
 
-    <section class="intro-band" id="manifesto">
-      <div class="manifesto-title-wrap"><span class="blood-badge" aria-hidden="true">13</span><h2 class="intro-title" id="manifestoTitle">今晚别先睡。</h2></div>
-      <div class="intro-side">
-        <p id="manifestoCopy">这页不负责替你选“必看”。它只把值得花时间的东西放到同一张桌上。</p>
-        <div class="source-note" id="manifestoMeta"><b>80 部 / 6 种媒介</b><br>分数在角落，偏见在前面。<br>每次打开，会换一张便签。</div>
-      </div>
+    <section class="quote-band" id="manifesto">
+      <blockquote class="book-quote" id="bookQuote">夺走了别人一生的凶手，其人生并没有被夺走。</blockquote>
     </section>
 
     <section class="library" id="catalogue" aria-labelledby="catalogue-title">
@@ -72,6 +68,7 @@
           <button class="watch-filter active" data-watch-filter="all" type="button">全部</button>
           <button class="watch-filter" data-watch-filter="watched" type="button">已看</button>
           <button class="watch-filter" data-watch-filter="unwatched" type="button">未看</button>
+          <button class="watch-filter" data-watch-filter="to-watch" type="button">待看</button>
         </div>
       </div>
       <div class="filter-status" id="filterStatus" hidden><span id="filterStatusText"></span><button class="clear-filters" id="clearFilters" type="button">回到全部馆藏</button></div>
@@ -94,8 +91,11 @@
 
     <section class="guestbook" id="guestbook" aria-labelledby="guestbook-title">
       <div class="guestbook-inner">
-        <div><p class="guestbook-index">02 / GUEST BOOK</p><h2 id="guestbook-title">留言板</h2><p class="guestbook-copy">想补一部，想反驳一条，或者只想说你看完以后没睡着，都可以写下来。</p><a class="guestbook-email" href="mailto:yunhaofu979@gmail.com">yunhaofu979@gmail.com</a></div>
-        <form class="guestbook-form" id="guestbookForm" data-email="yunhaofu979@gmail.com"><label for="guestbookMessage">写给编辑</label><textarea id="guestbookMessage" maxlength="800" required placeholder="留下片名、想法或一句话"></textarea><button type="submit"><i data-lucide="send"></i> 发送留言</button></form>
+        <div><p class="guestbook-index">02 / GUEST BOOK</p><h2 id="guestbook-title">留言板</h2><a class="guestbook-email" href="mailto:yunhaofu979@gmail.com">yunhaofu979@gmail.com</a></div>
+        <div class="guestbook-content">
+          <form class="guestbook-form" id="guestbookForm" data-email="yunhaofu979@gmail.com"><label for="guestbookMessage">写给欧多多</label><textarea id="guestbookMessage" maxlength="800" required placeholder="留下片名、想法或一句话"></textarea><div class="mailer-row"><label for="mailer">通过</label><select id="mailer" name="mailer"><option value="gmail">Gmail</option><option value="qq">QQ 邮箱</option><option value="163">163 邮箱</option></select><button type="submit"><i data-lucide="send"></i> 发送留言</button></div></form>
+          <div class="guestbook-list" id="guestbookList" aria-live="polite"></div>
+        </div>
       </div>
     </section>
 
@@ -109,12 +109,13 @@
     <article class="dialog">
       <button class="close" id="closeModal" type="button" aria-label="关闭详情"><i data-lucide="x"></i></button>
       <div class="dialog-art" id="dialogArt"><span class="dialog-code" id="dialogCode">ARCHIVE / 000</span></div>
-      <div class="dialog-body"><div class="dialog-meta" id="dialogMeta"></div><h2 id="dialogTitle"></h2><div class="dialog-original" id="dialogOriginal"></div><p class="dialog-summary" id="dialogSummary"></p><div class="personal-panel"><div class="personal-row"><span>观看状态</span><div class="watch-controls" id="watchControls"><button type="button" data-watch-status="watched">已看</button><button type="button" data-watch-status="unwatched">未看</button><button type="button" data-watch-status="clear">清除</button></div></div><div class="personal-row"><span>我的标星</span><div class="star-controls" id="starControls"><button type="button" data-rating="1" aria-label="1 星"><i data-lucide="star"></i></button><button type="button" data-rating="2" aria-label="2 星"><i data-lucide="star"></i></button><button type="button" data-rating="3" aria-label="3 星"><i data-lucide="star"></i></button><button type="button" data-rating="4" aria-label="4 星"><i data-lucide="star"></i></button><button type="button" data-rating="5" aria-label="5 星"><i data-lucide="star"></i></button></div></div><div class="local-notes"><div class="notes-heading"><span>读者点评</span><small>仅保存在此设备</small></div><form id="noteForm"><textarea id="noteInput" maxlength="500" placeholder="写下你的看法"></textarea><button type="submit">保存笔记</button></form><div id="noteList"></div></div></div><div class="dialog-bottom"><button class="save-dialog" id="dialogSave" type="button"><i data-lucide="bookmark"></i><span>加入我的清单</span></button><span class="dialog-score" id="dialogScore"></span><a class="go-source" id="dialogLink" href="#" target="_blank" rel="noopener"><span id="dialogLinkLabel">打开中文资料</span><i data-lucide="arrow-up-right"></i></a></div></div>
+      <div class="dialog-body"><div class="dialog-meta" id="dialogMeta"></div><h2 id="dialogTitle"></h2><div class="dialog-original" id="dialogOriginal"></div><p class="dialog-summary" id="dialogSummary"></p><div class="personal-panel"><div class="personal-row"><span>观看状态</span><div class="watch-controls" id="watchControls"><button type="button" data-watch-status="watched">已看</button><button type="button" data-watch-status="unwatched">未看</button><button type="button" data-watch-status="to-watch">待看</button><button type="button" data-watch-status="clear">清除</button></div></div><div class="personal-row"><span>我的标星</span><div class="star-controls" id="starControls"><button type="button" data-rating="1" aria-label="1 星"><i data-lucide="star"></i></button><button type="button" data-rating="2" aria-label="2 星"><i data-lucide="star"></i></button><button type="button" data-rating="3" aria-label="3 星"><i data-lucide="star"></i></button><button type="button" data-rating="4" aria-label="4 星"><i data-lucide="star"></i></button><button type="button" data-rating="5" aria-label="5 星"><i data-lucide="star"></i></button></div></div><div class="local-notes"><div class="notes-heading"><span>读者点评</span><small>仅保存在此设备</small></div><form id="noteForm"><textarea id="noteInput" maxlength="500" placeholder="写下你的看法"></textarea><button type="submit">保存笔记</button></form><div id="noteList"></div></div></div><div class="dialog-bottom"><button class="save-dialog" id="dialogSave" type="button"><i data-lucide="bookmark"></i><span>加入我的清单</span></button><span class="dialog-score" id="dialogScore"></span><a class="go-source" id="dialogLink" href="#" target="_blank" rel="noopener"><span id="dialogLinkLabel">打开中文资料</span><i data-lucide="arrow-up-right"></i></a></div></div>
     </article>
   </div>
 
   <script src="data/catalogue.js" defer></script>
   <script src="data/covers.js" defer></script>
+  <script src="data/quotes.js" defer></script>
   <script src="assets/app.js" defer></script>
 </body>
 </html>
